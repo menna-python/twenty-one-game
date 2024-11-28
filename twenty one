@@ -1,0 +1,75 @@
+import os
+import random
+import time
+def clear_terminal():
+    os.system("cls"if os.name=="nt" else "clear")
+def deal_cards():
+    cards=[11,1,2,3,4,5,6,7,8,9,10,10,10,10]
+    return random.choice(cards)
+def calculate_score(cards):
+    if sum(cards)==21 and len(cards)==2:
+        return 0
+    if sum(cards)>21 and 11 in cards:
+        cards.remove(11)
+        cards.append(1)
+    return sum(cards)
+def compare(user_score,computer_score):
+    results={"user_21":"Congrats,You win with black jack",
+             "computer_21":"Sorry,The computer wins with black jack and you lose",
+             "user_over":"Sorry,You went over 21 and lose",
+             "computer_over":"Congrats,The computer went over 21 and you win",
+             "draw":"Draw",
+             "user_win":"Congrats,you win",
+             "computer_win":"Sorry,The computer wins with greater score and you lose",}
+    if user_score==computer_score:
+       return results["draw"]
+    elif user_score==0:
+       return results["user_21"]
+    elif computer_score==0:
+       return results["computer_21"]
+    elif user_score>21:
+       return results["user_over"]
+    elif computer_score>21:
+       return results["computer_over"]
+    elif user_score>computer_score:
+       return results["user_win"]
+    else:
+        return results["computer_win"]
+def game():
+    print("""
+.------..------..------..------..------..------.     .------..------..------.
+|T.--. ||W.--. ||E.--. ||N.--. ||T.--. ||Y.--. |.-.  |O.--. ||N.--. ||E.--. |
+| :/\: || :/\: || (\/) || :(): || :/\: || (\/) ((5)) | :/\: || :(): || (\/) |
+| (__) || :\/: || :\/: || ()() || (__) || :\/: |'-.-.| :\/: || ()() || :\/: |
+| '--'T|| '--'W|| '--'E|| '--'N|| '--'T|| '--'Y| ((1)) '--'O|| '--'N|| '--'E|
+`------'`------'`------'`------'`------'`------'  '-'`------'`------'`------'
+
+ """)                       
+ 
+    user_cards=[deal_cards() for _ in range(2)]
+    computer_cards=[deal_cards() for _ in range(2)]
+    while True:
+        user_score=calculate_score(user_cards)
+        computer_score=calculate_score(computer_cards)
+        print(f"\n\nYour cards are {user_cards} with score {calculate_score(user_cards)}")
+        print(f"Computer first card is {computer_cards[0]}")
+        if user_score==0 or computer_score==0 or user_score>21 or computer_score>21:
+            break
+        else:
+            if input("Get another card?(Y/N): ").lower()=="y":
+                clear_terminal()
+                user_cards.append(deal_cards())
+                user_score=calculate_score(user_cards)
+            else:
+                break
+    while computer_cards !=0 and computer_score<17:
+        computer_cards.append(deal_cards())
+        computer_score=calculate_score(computer_cards)
+    print(f"\n\nYour final hand is {user_cards} with final score {user_score}")
+    print(f"Computer final hand is {computer_cards} with final score {computer_score}")
+    print(compare(user_score,computer_score))
+while input("Choose a game to play:\n1-Froggy\n2-Twenty one\n3-Snake\n").lower()=="twenty one":
+    print("Loading game....")
+    time.sleep(3)
+    game()
+        
